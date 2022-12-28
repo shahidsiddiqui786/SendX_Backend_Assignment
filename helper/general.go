@@ -12,7 +12,7 @@ func Min(a, b int) int {
 /* simple concatenation
 */
 func GeneratePath(id string) string {
-	return "file/" + id + ".html"
+	return "files/" + id + ".html"
 }
 
 /* General Filter Function for the array.

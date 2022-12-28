@@ -205,7 +205,6 @@ func fetchUrl(lc *helper.LocalCache,context *gin.Context){
 
 	u,er := lc.Read(url.URI)
 	if er == nil {
-		fmt.Println(u)
 		response.ID = u.ID
 		response.SourceURI = helper.GeneratePath(u.ID)
 
@@ -215,7 +214,6 @@ func fetchUrl(lc *helper.LocalCache,context *gin.Context){
 
 	uid := uuid.New()
 	filepath := helper.GeneratePath(uid.String())
-	fmt.Println("url: ", url.URI ,"retry: ", url.RetryLimit)
 	err := DownloadFile(filepath, url.URI, helper.Min(url.RetryLimit,10))
 	if err != nil {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": err})
@@ -239,6 +237,11 @@ func main() {
 
 	localCache := helper.InitLocalCache(24 * time.Hour)
 	router := gin.Default()
+
+	// Create the downloads directory if it doesn't exist
+	if _, err := os.Stat("files"); os.IsNotExist(err) {
+		os.Mkdir("files", 0755)
+	}
 
 	router.POST("/fetch", func(context *gin.Context) {fetchUrl(localCache,context)})
 	router.POST("/fetchAll", func(context *gin.Context) {fetchAllUrls(localCache,context)})
