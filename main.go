@@ -14,32 +14,49 @@ import (
 
 /* Fetch and Download the url at the filepath ,on error return error */
 func DownloadFile(filepath string, url string,retry int) error{
-
-	// Fetching Url Data thorugh http.Get
-	response, err := http.Get(url)
-
-	// On Error Trying again or return error
-	if err != nil {
-		if retry > 0 {
-			fmt.Println("Some Error Occured while fetching url trying again!")
-			return DownloadFile(filepath, url, retry-1)
+    var global_err error
+	for i :=0; i<retry; i++ {
+		// Fetching Url Data thorugh http.Get
+		response, err := http.Get(url)
+        flag :=	0
+		// On Error Trying again or return error
+		if err != nil {
+			if retry > 0 {
+				fmt.Println("Some Error Occured while fetching url trying again!")
+			}
+			global_err = err
+			flag = 1
 		}
-		return err
-	}
 
-	defer response.Body.Close()
-	
-	// file creation
-	out, err := os.Create(filepath)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	defer out.Close()
+		defer response.Body.Close()
 
-	// Write the body to file
-	_, err = io.Copy(out, response.Body)
-	return err
+		if flag == 1 {
+			continue
+		}
+		// file creation
+		out, err := os.Create(filepath)
+		if err != nil {
+			fmt.Println(err)
+			global_err = err
+			flag = 1
+		}
+		defer out.Close()
+
+        if flag == 1 {
+			continue
+		}
+		// Write the body to file
+		_, err = io.Copy(out, response.Body)
+		
+		if err != nil {
+			flag = 1
+		}
+		if flag == 1 {
+			continue
+		}
+		break
+	}
+	return global_err
 }
 
 /* Fetch and Download the url with different channels
