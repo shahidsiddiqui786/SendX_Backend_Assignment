@@ -66,7 +66,7 @@ func (lc *LocalCache) Update(u StoreUrl, expireAtTimestamp int64) {
 */
 func UpdateCache(lc *LocalCache,responses []UrlResponse){
 	for _, response := range responses {
-		lc.Update(StoreUrl{ID: response.ID, URL: response.URI}, time.Now().Add(1*time.Minute).Unix())
+		lc.Update(StoreUrl{ID: response.ID, URL: response.URI}, time.Now().Add(24 * time.Hour).Unix())
 	}
 }
 

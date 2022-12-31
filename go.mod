@@ -1,4 +1,4 @@
-module github.com/shahid/todoapp
+module github.com/shahidsiddiqui786/SendX_Backend_Assignment
 
 go 1.19
 

@@ -27,6 +27,11 @@ type UrlRequest struct {
 	RetryLimit int    `json:"retryLimit"`
 }
 
+type Task struct {
+	Request UrlRequest `json:"request"`
+	ID      string     `json:"id"`
+}
+
 type UrlResponse struct {
 	ID        string `json:"id"`
 	URI       string `json:"uri"`

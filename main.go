@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/shahid/todoapp/helper"
+	"github.com/shahidsiddiqui786/SendX_Backend_Assignment/helper"
 )
 
 /* Fetch and Download the url at the filepath ,on error return error */
@@ -243,8 +243,15 @@ func main() {
 		os.Mkdir("files", 0755)
 	}
 
+	tasks := make(chan helper.Task, 10000)
+	for w := 1; w <= 10; w++ {
+		go helper.Worker(tasks)
+	}
+
 	router.POST("/fetch", func(context *gin.Context) {fetchUrl(localCache,context)})
 	router.POST("/fetchAll", func(context *gin.Context) {fetchAllUrls(localCache,context)})
+
+	router.POST("/fetchWorker", func(context *gin.Context) {helper.FetchWorker(localCache,context,tasks)})
 
 	router.Run("localhost:9090")
 }

@@ -38,6 +38,7 @@ I have Implemented Both Part of the Assignment.
 
 
 ## Concurrent Version
+- Created a fix number of workers who will be doing the downloading task concurrently.
 - Created a API Endpoint `http://localhost:9090/fetchall` which will take a list of urls and retry limit and return the response as follows.
 
 
